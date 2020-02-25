@@ -1,0 +1,29 @@
+<div class="auth">
+  <div class="auth_block_card">
+    <div class="logo">
+      <img src="assets/img/panel/icon.png" alt="">
+    </div>
+    <div class="content">
+      <p>Введите код подтверждения</p>
+      <form (ngSubmit)="confirm()" #ConfirmForm="ngForm">
+
+        <div class="form-group">
+          <input type="text" name="code" id="code" placeholder="Ваш код подтверждения" [(ngModel)]="userData.code"
+            class="form-control" #code="ngModel" required>
+          <div [hidden]="code.valid || code.pristine" class="valid_form_error">
+            Код обязателен
+          </div>
+        </div>
+
+        <button type="submit" [disabled]="ConfirmForm.form.invalid" id="auth" class="btn auth_block_button">
+          Далее &rarr;
+        </button>
+      </form>
+      <div class="form_footer">
+        <p>Вспомнили пароль?
+          <span [routerLink]="['../sign-in']">Войти</span>
+        </p>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,147 @@
+<div class="main-content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card card_block_table">
+                    <div class="header">
+                        <div class="pull-left">
+                            <h4 class="title">Список поставщиков</h4>
+                            <p class="category">Можно посмотреть и изменить любую информацию</p>
+                        </div>
+                        <div class="pull-right">
+                            <button type="button" class="create_block_button btn"
+                                (click)="openModal(addProductTempalte)">
+                                Добавить
+                                Поставщика
+                            </button>
+                        </div>
+                        <input #input [(ngModel)]="params['name']" class="header-search"
+                            placeholder="Начните вводить имя фамилию или Эл. почту">
+                    </div>
+                    <div class="content table-responsive table-full-width">
+                        <table class="table table-hover table-striped">
+                            <thead>
+                                <tr>
+                                    <th *ngFor="let cell of tableHeader">{{ cell }}</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let row of list; trackBy:row?.id" [ngClass]="{'checkedOn': row.checked}">
+                                    <td>{{row.name}}</td>
+                                    <td>{{row.email}}</td>
+                                    <td>{{row.description}}</td>
+                                    <td *ngIf="row.userInfo.length!==0">
+                                        {{row.userInfo[0].surname}} {{row.userInfo[0].name}}({{row.userInfo[0].email}})
+                                    </td>
+                                    <td *ngIf="row.userInfo.length===0">
+                                        Отсуствует
+                                    </td>
+                                    <td>
+                                        <a style="cursor: pointer" (click)="openModal(addProductTempalte,row.id)">
+                                            <img src="assets/img/edit.svg" alt="">
+                                        </a>
+                                    </td>
+                                    <td>
+                                        <a style="cursor: pointer" (click)="destroyModal(confirmDelete,row.id)"
+                                            tooltip="Удалить файл">
+                                            <img src="assets/img/delete.svg" alt="">
+                                        </a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="pagination_block">
+                    <pagination previousText="Назад" nextText="Далее" firstText="Начало" lastText="Последний"
+                        [itemsPerPage]="itemsPerPage" [boundaryLinks]="boundaryLinks" [totalItems]="totalItems"
+                        [(ngModel)]="currentPage" (pageChanged)="pageChanged($event)"></pagination>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Modal -->
+<ng-template #addProductTempalte>
+    <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+        <span aria-hidden="true">&times;</span>
+    </button>
+    <div class="modal-header template_crud_header_block">
+        <h4 class="modal-title pull-left">Поставщик</h4>
+    </div>
+    <div class="modal-body template_crud_body_block">
+        <form (ngSubmit)="create()" #ProviderForm="ngForm">
+            <div class="form-group">
+                <label for="name">Название</label>
+                <input #name required type="text" class="form-control" name="name" [(ngModel)]="entity.name" id="name">
+                <div [hidden]="name.valid || name.pristine" class="valid_form_error">
+
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input #email required type="text" class="form-control" name="email" [(ngModel)]="entity.email"
+                    id="email">
+                <div [hidden]="name.valid || name.pristine" class="valid_form_error">
+
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="category">Категории</label>
+                <owl-check-box style="display: flex;" *ngFor="let category of categories; let in = index;"
+                    class="demo-chkbox" [(ngModel)]="entity.categories" [binary]="false" [id]="'got'+ in"
+                    [name]="'dramas'" [value]="category['id']">
+                    {{category['name']}}
+                </owl-check-box>
+            </div>
+
+            <div class="form-group">
+                <label for="name">Описание</label>
+                <textarea #description required type="text" class="form-control" name="description"
+                    [(ngModel)]="entity.description" id="description">
+                </textarea>
+                <div [hidden]="name.valid || name.pristine" class="valid_form_error">
+
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="user_list">Выберите представителя</label>
+                <ngx-select name="users" [multiple]="true" [optionTextField]="'email'" [items]="users"
+                    [disabled]="ngxDisabled" [(ngModel)]="entity.users" (selectionChanges)="doSelectOptions($event)">
+                    <ng-template ngx-select-option ngx-select-option-selected let-option let-text="text">
+                        <span style="width: auto;" [innerHtml]="text"></span>
+                        &nbsp; ({{option.data.surname}} {{option.data.name}})
+                    </ng-template>
+                </ngx-select>
+            </div>
+
+            <div class="form-group">
+                <button [disabled]="ProviderForm.form.invalid" type="submit"
+                    class="button_template_form form-control btn">
+                    {{editMode?'Сохранить':'Создать'}}
+                </button>
+            </div>
+
+
+        </form>
+    </div>
+</ng-template>
+
+
+<ng-template #confirmDelete>
+    <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+        <span aria-hidden="true">&times;</span>
+    </button>
+    <div class="modal-body top_space" style="text-align: center">
+        <h4 class="modal-title">Подтвердите действие</h4>
+        <p>Вы действительно хотите удалить запись?</p>
+        <div class="float-right">
+            <button style="width: 140px" type="button" class="btn " (click)="destroy()">Да</button>
+            <button style="width: 140px" type="button" class="btn " (click)="modalRef.hide()">Нет</button>
+        </div>
+
+    </div>
+</ng-template>

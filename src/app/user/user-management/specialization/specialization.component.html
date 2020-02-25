@@ -1,0 +1,101 @@
+<div class="main-content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card card_block_table">
+          <div class="header">
+            <div class="pull-left">
+              <h4 class="title">Список специализаций</h4>
+              <p class="category">Можно посмотреть и изменить любую информацию</p>
+            </div>
+            <div class="pull-right">
+              <button type="button" class="create_block_button btn" (click)="openModal(addSpecTempalte)">
+                Добавить
+                Специализацию
+              </button>
+            </div>
+            <!-- <input #input [(ngModel)]="params['name']" class="header-search"
+              placeholder="Начните вводить имя фамилию или Эл. почту"> -->
+          </div>
+          <div class="content table-responsive table-full-width">
+            <table class="table table-hover table-striped">
+              <thead>
+                <tr>
+                  <th *ngFor="let cell of tableHeader">{{ cell }}</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let row of list; trackBy:row?.id" [ngClass]="{'checkedOn': row.checked}">
+                  <td>{{row.name}}</td>
+                  <td>{{row.created_at}}</td>
+                  <td>
+                    <a style="cursor: pointer" (click)="openModal(addSpecTempalte,row.id)">
+                      <img src="assets/img/edit.svg" alt="">
+                    </a>
+                  </td>
+                  <td>
+                    <a style="cursor: pointer" (click)="destroyModal(confirmDelete,row.id)" tooltip="Удалить файл">
+                      <img src="assets/img/delete.svg" alt="">
+                    </a>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="pagination_block">
+          <pagination previousText="Назад" nextText="Далее" firstText="Начало" lastText="Последний"
+            [itemsPerPage]="itemsPerPage" [boundaryLinks]="boundaryLinks" [totalItems]="totalItems"
+            [(ngModel)]="currentPage" (pageChanged)="pageChanged($event)"></pagination>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- Modal -->
+<ng-template #addSpecTempalte>
+  <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+    <span aria-hidden="true">&times;</span>
+  </button>
+  <div class="modal-header template_crud_header_block">
+    <h4 class="modal-title pull-left">Специализация</h4>
+  </div>
+  <div class="modal-body template_crud_body_block">
+    <form (ngSubmit)="create()" #SpecForm="ngForm">
+
+      <div class="form-group">
+        <label for="name">Название</label>
+        <input #name required type="text" class="form-control" name="name" [(ngModel)]="entity.name" id="name">
+        <div [hidden]="name.valid || name.pristine" class="valid_form_error">
+
+        </div>
+      </div>
+
+      <div class="form-group">
+        <button [disabled]="SpecForm.form.invalid" type="submit" class="button_template_form form-control btn">
+          {{editMode?'Сохранить':'Создать'}}
+        </button>
+      </div>
+
+
+    </form>
+  </div>
+</ng-template>
+
+
+<ng-template #confirmDelete>
+  <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+    <span aria-hidden="true">&times;</span>
+  </button>
+  <div class="modal-body top_space" style="text-align: center">
+    <h4 class="modal-title">Подтвердите действие</h4>
+    <p>Вы действительно хотите удалить запись?</p>
+    <div class="float-right">
+      <button style="width: 140px" type="button" class="btn " (click)="destroy()">Да</button>
+      <button style="width: 140px" type="button" class="btn " (click)="modalRef.hide()">Нет</button>
+    </div>
+
+  </div>
+</ng-template>

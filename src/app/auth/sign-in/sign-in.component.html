@@ -1,0 +1,39 @@
+<div class="auth">
+    <div class="auth_block_card">
+        <div class="logo">
+            <img src="assets/img/panel/icon.png" alt="">
+        </div>
+        <div class="content">
+            <p>Введите учетные данные</p>
+            <form action="">
+                <div class="form-group">
+                    <input type="email" name="email" id="email" placeholder="Ваша почта" [(ngModel)]="userData.email"
+                        class="form-control">
+                </div>
+                <div class="form-group">
+                    <input type="password" name="password" id="password" placeholder="Ваш пароль"
+                        [(ngModel)]="userData.password" class="form-control">
+                </div>
+
+                <div class="auth_block_checkbox">
+                    <label class="download-modal-label">
+                        <input type="checkbox" name="autologin" [(ngModel)]="autologin" class="download-modal-checkbox">
+                        <span></span>
+                    </label>&nbsp;
+                    <p>Запомнить меня</p>
+                </div>
+
+
+                <button id="auth" class="btn auth_block_button" (click)="signIn()">
+                    Войти &rarr;
+                </button>
+            </form>
+
+            <div class="form_footer">
+                <p>Забыли пароль?
+                    <span [routerLink]="['../forgot-password']">Восстановить пароль</span>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>

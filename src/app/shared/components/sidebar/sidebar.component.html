@@ -1,0 +1,31 @@
+<div class="sidebar-wrapper sub_menu">
+    <div class="logo">
+        <a class="simple-text">
+            <div class="logo-img">
+                <img src="assets/img/panel/logo_reg.png"/>
+            </div>
+        </a>
+        <div [owlTooltip]="user_info" [owlTooltipPosition]="'right'">
+            <button type="button" id="popup_profile_button" class="btn btn-default btn-secondary popup_profile_button"
+                    placement="bottom">
+                <img src="assets/img/default-avatar.png" alt="">
+            </button>
+        </div>
+    </div>
+    <ul class="nav responsive-nav">
+        <li *ngIf="isMobileMenu()">
+            <a>
+                <p style="height: 40px;" (click)="logout()">Выйти&nbsp;
+                    <img style="height: 40px;" src="assets/img/exite_white.svg" alt="">
+                </p>
+            </a>
+        </li>
+        <li class="separator hidden-lg hidden-md" *ngIf="isMobileMenu()"></li>
+        <li style="width: 100%" routerLinkActive="active" *ngFor="let menuItem of menuItems" class="{{menuItem.class}}">
+            <a style="padding: 10px" [routerLink]="[menuItem.path]">
+                <i class="{{menuItem.icon}}"></i>
+                <p>{{menuItem.title}}</p>
+            </a>
+        </li>
+    </ul>
+</div>

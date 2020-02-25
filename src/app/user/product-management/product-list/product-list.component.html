@@ -1,0 +1,275 @@
+<div class="main-content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <owl-accordion>
+                    <owl-expansion-panel>
+                        <owl-expansion-panel-header>
+                            <owl-expansion-panel-title>
+                                Инструкция по загрузке файлов
+                            </owl-expansion-panel-title>
+                        </owl-expansion-panel-header>
+                        Пример файла можно скачать по <a target="_blank" href="assets/vinyl.xlsx">Ссылке</a>.
+                        Необходимо соблюдать названия полей как в документе выше.
+                        <strong>category_id*</strong> - идентификатор категории товара. У винила - 1, защита - 2,
+                        тонировка - 3, инструменты - 5;
+                        <strong>name*</strong> - название товара;
+                        <strong>price*</strong> - цена в рублях;
+                        <strong>description</strong> - описание;
+                        <strong>article</strong> - артикул;
+                        <strong>action</strong> - акция;
+                        <strong>new</strong> - новинка;
+                        <strong>image_link *</strong> - ссылка на изображение товара;
+                        <strong>count*</strong> - количество едениц товара (штук/рулонов т.п.);
+                        Выше перечисленны поля общие для всех категорий. У каждой категории есть дополнительные поля.
+                        Их
+                        названия можно взять нажав на кнопку "Добавить товар", и изменить категорию. В зависимости от
+                        нее поля
+                        будут изменяться. <strong> К примеру у категории "Винил" будут поля
+                            серия, длинна рулона (м), тип, гарантия (лет)</strong>
+                        <p><strong>* - помечены поля обязательные к заполнению.</strong></p>
+                    </owl-expansion-panel>
+                </owl-accordion>
+                <div style="margin-top: 20px;" class="card card_block_table">
+                    <div class="header">
+                        <div class="pull-left">
+                            <h4 class="title">Список товаров в системе</h4>
+                            <p class="category">Можно посмотреть и изменить любую информацию</p>
+                        </div>
+                        <div class="pull-right">
+                            <button class="mass_delete_button"
+                                [ngStyle]="{'display': selectedGroceries.length >= 1 ? 'inline-block' : 'none'}"
+                                (click)="deleteMass()">Удалить
+                            </button>
+
+                            <button style="margin: 15px 15px;" type="button" class="create_block_button btn"
+                                (click)="openModal(importFile)">
+                                Загрузить с файла
+                            </button>
+                            <button style="margin: 15px 0;" type="button" class="create_block_button btn"
+                                (click)="openModal(addUserTemplate)">
+                                Добавить товар
+                            </button>
+                        </div>
+                        <input #input [(ngModel)]="params['name']" class="header-search"
+                            placeholder="Начните вводить название товара">
+                    </div>
+                    <div class="content table-responsive table-full-width">
+                        <table class="table table-hover table-striped">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        <owl-check-box [(ngModel)]="fruitChecked" [(indeterminate)]="fruitIndeterminate"
+                                            (change)="toggleFruitCheck($event)">
+                                        </owl-check-box>
+                                    </th>
+                                    <th *ngFor="let cell of tableHeader">{{ cell }}</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let row of list; trackBy:row?.id"
+                                    [ngClass]="{'checkedOn': row.id === checked(row.id)}">
+                                    <td>
+
+                                        <owl-check-box [(ngModel)]="selectedGroceries" [binary]="false"
+                                            [name]="'grocery'" [value]="row.id" (change)="onFruitChange($event)">
+                                        </owl-check-box>
+                                    </td>
+                                    <td style="width: 100px;"><img style="width: 100%;" [src]="row.image_link" alt="">
+                                    </td>
+                                    <td>{{row.name}}</td>
+                                    <td>{{row.provider}}</td>
+                                    <td>{{row.category}}</td>
+                                    <td>{{row.price}}</td>
+                                    <td>{{row.count}}</td>
+                                    <td>
+                                        <a style="cursor: pointer" (click)="openModal(addUserTemplate,row)">
+                                            <img src="assets/img/edit.svg" alt="">
+                                        </a>
+                                    </td>
+                                    <td>
+                                        <a style="cursor: pointer" (click)="destroyModal(confirmDelete,row)"
+                                            tooltip="Удалить файл">
+                                            <img src="assets/img/delete.svg" alt="">
+                                            <!--<i-->
+                                            <!--class="pe-7s-trash"></i>-->
+                                        </a>
+                                    </td>
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="pagination_block">
+                    <pagination [maxSize]="6" previousText="Назад" nextText="Далее" firstText="Начало"
+                        lastText="Последний" [itemsPerPage]="itemsPerPage" [boundaryLinks]="boundaryLinks"
+                        [totalItems]="totalItems" [(ngModel)]="params['page']" (pageChanged)="pageChanged($event)">
+                    </pagination>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modal -->
+<ng-template #addUserTemplate>
+    <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+        <span aria-hidden="true">&times;</span>
+    </button>
+    <div class="modal-header template_crud_header_block">
+        <h4 class="modal-title pull-left">Товар</h4>
+    </div>
+    <div class="modal-body template_crud_body_block">
+        <form (ngSubmit)="create()" #UserListForm="ngForm">
+            <div *ngIf="showProviderSelector" class="form-group">
+                <label for="provider_id">Поставщик</label>
+                <select #provider="ngModel" class="form-control" id="provider_id" [(ngModel)]="entity.provider_id"
+                    name="role_id" (change)="proviredChange($event)" required>
+                    <option *ngFor="let provider of providers" [value]="provider['id']">{{provider.name}}</option>
+                </select>
+                <div [hidden]="provider.valid || provider.pristine" class="valid_form_error">
+                    Поставщик обязательный
+                </div>
+            </div>
+            <div *ngIf="!editMode" class="form-group">
+                <label for="category_id">Категория</label>
+                <select #category="ngModel" required class="form-control" id="category_id" (change)="categoryChanged()"
+                    [(ngModel)]="entity.category_id" name="role_id">
+                    <option *ngFor="let category of categories" value="{{category.id}}">{{category.name}}</option>
+                </select>
+                <div [hidden]="category.valid || category.pristine" class="valid_form_error">
+                    Категория обязательна
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="name">Название</label>
+                <input #name="ngModel" required type="text" class="form-control" name="name" [(ngModel)]="entity.name"
+                    id="name">
+                <div [hidden]="name.valid || name.pristine" class="valid_form_error">
+                    Название обязательное
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="price">Цена (руб) видит покупатель в приложении</label>
+                <input #price="ngModel" required type="text" class="form-control" id="price" [(ngModel)]="entity.price"
+                    name="price">
+                <div [hidden]="price.valid || price.pristine" class="valid_form_error">
+                    Название обязательное
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="article">Артикул</label>
+                <input type="text" class="form-control" id="article" [(ngModel)]="entity.article" name="article">
+            </div>
+            <div class="form-group">
+                <label for="article">Описание</label>
+                <input type="text" class="form-control" id="description" [(ngModel)]="entity.description"
+                    name="description">
+
+            </div>
+            <div class="form-group">
+                <label for="image_link">Ссылка на изображение</label>
+                <input #image_link="ngModel" required type="text" class="form-control" id="image_link"
+                    [(ngModel)]="entity.image_link" name="image_link">
+                <div [hidden]="image_link.valid || image_link.pristine" class="valid_form_error">
+                    Название обязательное
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="count">В наличии (шт.) </label>
+                <input type="number" class="form-control" id="count" [(ngModel)]="entity.count" name="count" min="0">
+
+            </div>
+            <div *ngIf="!editMode">
+                <div class="form-group" *ngFor="let field of categories[entity.category_id-1].fields">
+                    <label for="{{field.field_name}}">{{field.field_name}}</label>
+                    <input #value="ngModel" required type="text" class="form-control" id="{{field.field_name}}"
+                        [(ngModel)]="field.value" name="{{field.field_name}}">
+                    <div [hidden]="value.valid || value.pristine" class="valid_form_error">
+                        Название обязательное
+                    </div>
+                </div>
+            </div>
+            <div *ngIf="editMode">
+                <div class="form-group" *ngFor="let attribute of entity.attributes">
+                    <label for="{{attribute.attribute_name}}">{{attribute.attribute_name}}</label>
+                    <input #attribute_name="ngModel" required type="text" class="form-control"
+                        id="{{attribute.attribute_name}}" [(ngModel)]="attribute.value"
+                        name="{{attribute.attribute_name}}">
+                    <div [hidden]="attribute_name.valid || attribute_name.pristine" class="valid_form_error">
+                        Название обязательное
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="action">Акция</label>
+                <owl-check-box class="form-control" name="action" [checked]="entity.action" [value]="entity.action"
+                    (change)="actionChange($event)">
+                </owl-check-box>
+            </div>
+            <div class="form-group">
+                <label for="new">Новинка</label>
+                <owl-check-box class="form-control" name="new" [checked]="entity.new" [value]="entity.new"
+                    (change)="newChange($event)">
+                </owl-check-box>
+            </div>
+            <div class="form-group">
+                <button type="submit" [disabled]="UserListForm.form.invalid"
+                    class="button_template_form form-control btn">
+                    Сохранить
+                </button>
+            </div>
+        </form>
+    </div>
+</ng-template>
+
+
+<ng-template #confirmDelete>
+    <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+        <span aria-hidden="true">&times;</span>
+    </button>
+    <div class="modal-body top_space" style="text-align: center">
+        <h4 class="modal-title">Подтвердите действие</h4>
+        <p> {{comments? 'У данного товара есть отзыв, вы действительно хотите удалить запись?': 'У товара есть отзыв, удаляя его, отзыв будет удален, вы действительно хотите удалить товар?'}}
+        </p>
+        <div class="float-right">
+            <button style="width: 140px;" type="button" class="btn " (click)="destroy()">Да</button>
+            <button style="width: 140px;" type="button" class="btn " (click)="modalRef.hide()">Нет</button>
+        </div>
+
+    </div>
+</ng-template>
+
+<ng-template #importFile>
+    <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+        <span aria-hidden="true">&times;</span>
+    </button>
+    <div class="modal-header template_crud_header_block">
+        <h4 class="modal-title pull-left">Загрузить файл</h4>
+    </div>
+    <div class="modal-body template_crud_body_block">
+        <form>
+            <div *ngIf="showProviderSelector" class="form-group">
+                <label for="provider_id">Поставщик</label>
+                <select #provider="ngModel" class="form-control" id="provider_id" [(ngModel)]="entity.provider_id"
+                    name="role_id" (change)="proviredChange($event)" required>
+                    <option *ngFor="let provider of providers" [value]="provider['id']">{{provider.name}}</option>
+                </select>
+                <div [hidden]="provider.valid || provider.pristine" class="valid_form_error">
+                    Поставщик обязательный
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="file">Загрузите файл</label>
+                <input type="file" class="form-control" id="file"
+                    accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
+                    (change)="handleFileInput($event.target.files)" name="count">
+            </div>
+            <div class="form-group">
+                <button type="button" class="button_template_form form-control btn" (click)="import()">Отправить
+                </button>
+            </div>
+
+        </form>
+    </div>
+</ng-template>

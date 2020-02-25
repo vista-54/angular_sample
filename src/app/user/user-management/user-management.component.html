@@ -1,0 +1,11 @@
+<div class="main-content main_content_tabs">
+
+    <ul class="nav nav-tabs navigate_block_tabs">
+        <li class="nav-item" *ngFor="let tab of menuItems; let index = index">
+            <a class="nav-link" routerLinkActive="active" [routerLink]="tab.url" href="#" *ngIf="tab.access">{{tab.title}}</a>
+        </li>
+    </ul>
+
+    <router-outlet></router-outlet>
+
+</div>

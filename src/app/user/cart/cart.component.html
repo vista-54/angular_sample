@@ -1,0 +1,45 @@
+<div class="main-content" style="margin-top: 60px;">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <owl-accordion *ngFor="let item of list" [accordionMode]="'gutter'">
+                    <owl-expansion-panel>
+                        <owl-expansion-panel-header>
+                            <owl-expansion-panel-title>
+                                {{item.data.user.full_name}} &nbsp; {{item.data.user.email}} <p style="margin-left: auto;">{{item.data.totalPrice}} рублей</p>
+                            </owl-expansion-panel-title>
+                            <!--<owl-expansion-panel-description>-->
+                            <!--My Description1-->
+                            <!--</owl-expansion-panel-description>-->
+                        </owl-expansion-panel-header>
+                        <div class="content table-responsive table-full-width">
+                            <table class="table table-hover table-striped">
+                                <thead>
+                                    <tr>
+                                        <th *ngFor="let cell of tableHeader">{{ cell }}</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let row of item.data.products">
+                                        <td>{{row.name}}</td>
+                                        <td>{{row.article}}</td>
+                                        <td>{{row.price}}</td>
+                                        <td>{{row.selectCount}}</td>
+                                        <!-- <td>{{row.provider}}</td> -->
+                                        <td>{{row.category}}</td>
+                                        <td>{{row.created_at | date: 'd.M.yy'}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </owl-expansion-panel>
+                </owl-accordion>
+                <div class="pagination_block">
+                    <pagination [maxSize]="6" previousText="Назад" nextText="Далее" firstText="Начало" lastText="Последний"
+                        [itemsPerPage]="itemsPerPage" [boundaryLinks]="boundaryLinks" [totalItems]="totalItems"
+                        [(ngModel)]="params['page']" (pageChanged)="pageChanged($event)"></pagination>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

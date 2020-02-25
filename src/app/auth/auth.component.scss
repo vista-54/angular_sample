@@ -1,0 +1,155 @@
+.auth {
+  min-height: 100vh;
+  background: url(src/assets/img/login_bg.png) no-repeat center center fixed;
+  background-size: cover;
+  padding-top: 140px;
+  .auth_block_card {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    margin: 0 auto;
+    width: 500px;
+    height: 535px;
+    padding: 80px 75px 75px;
+    position: relative;
+    background: #fff;
+    border-radius: 5px;
+    box-shadow: 0 3px 18px 0 rgba(28, 28, 29, 0.14);
+    .logo {
+      position: absolute;
+      top: -68px;
+      overflow: hidden;
+      width: 150px;
+      left: calc(50% - 75px);
+      border: 6px solid #00195a;
+      border-radius: 100px;
+      padding: 5px;
+      background: #fff;
+      img {
+        width: 100%;
+      }
+    }
+    .content {
+      p {
+        font: {
+          size: 23px;
+          family: 'Roboto', sans-serif;
+          weight: bold;
+        }
+        color: #000;
+        letter-spacing: .3px;
+      }
+      .form-group {
+        .form-control {
+          margin-bottom: 20px;
+          height: 57px;
+          width: 350px;
+          border: {
+            width: 1px;
+            color: rgb(85, 85, 85);
+            style: solid;
+            radius: 5px;
+          }
+          opacity: 0.6;
+          &::placeholder {
+            font: {
+              size: 18px;
+              family: 'Roboto', sans-serif;
+              weight: 400;
+            }
+            color: #4c4c4c;
+          }
+        }
+        &:first-child {
+          margin-bottom: 10px;
+          margin-top: 30px;
+        }
+        &:last-child {
+          margin-bottom: 0;
+        }
+      }
+      .auth_block_button {
+        border: {
+          width: 2px;
+          color: #fff;
+          style: solid;
+          radius: 5px;
+        }
+        font: {
+          size: 18px;
+          family: 'Roboto', sans-serif;
+        }
+        width: 350px;
+        height: 57px;
+        color: #fff;
+        background-color: rgb(9, 41, 91);
+      }
+      .auth_block_checkbox {
+        position: relative;
+        label {
+          position: absolute;
+          cursor: pointer;
+          top: 15px;
+          display: inline-block;
+          span {
+            font-size: 2.0rem;
+            &:before {
+              content: '✔';
+              display: inline-block;
+              width: 1.2em;
+              height: 1.2em;
+              margin-right: 1rem;
+              line-height: 1.2em;
+              border-radius: 100px;
+              text-align: center;
+              vertical-align: middle;
+              color: transparent;
+              border: 1px solid rgb(9, 41, 91);
+              //transition: $transition;
+            }
+          }
+          input[type="checkbox"] {
+            display: none;
+            &:checked + span {
+              &::before {
+                color: #fff;
+                background: rgb(9, 41, 91);
+                border-color: rgb(9, 41, 91);
+              }
+            }
+          }
+        }
+        p {
+          margin-left: 30px;
+          font: {
+            size: 18px;
+            family: 'Roboto', sans-serif;
+            weight: 400;
+          }
+          color: #000;
+          opacity: 0.7;
+        }
+      }
+      .form_footer {
+        text-align: center;
+        padding: 10px 10px 0;
+        p {
+          margin: 10px;
+          font: {
+            size: 12px;
+            weight: 400;
+            family: 'Open Sans', sans-serif;
+          }
+          color: #000;
+          span {
+            cursor: pointer;
+            color: rgb(9, 41, 91);
+            &:focus {
+              outline: none;
+            }
+          }
+        }
+      }
+    }
+  }
+}

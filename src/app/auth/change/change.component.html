@@ -1,0 +1,34 @@
+<div class="auth">
+  <div class="auth_block_card">
+    <div class="logo">
+      <img src="assets/img/panel/icon.png" alt="">
+    </div>
+    <div class="content">
+      <p>Смена пароля</p>
+      <form (ngSubmit)="change()" #ConfirmForm="ngForm">
+
+        <div class="form-group">
+          <input type="password" name="password" id="password" placeholder="Пароль" [(ngModel)]="userData.password"
+            class="form-control" #password="ngModel" required>
+          <div [hidden]="password.valid || password.pristine" class="valid_form_error">
+            Пароль обязателен
+          </div>
+        </div>
+
+        <div class="form-group">
+          <input type="password" name="passwordConfirm" id="passwordConfirm" placeholder="Подтвердите пароль"
+            [(ngModel)]="userData.passwordConfirm" class="form-control" #passwordConfirm="ngModel" required>
+        </div>
+
+        <button type="submit" [disabled]="ConfirmForm.form.invalid" id="auth" class="btn auth_block_button">
+          Сохранить &rarr;
+        </button>
+      </form>
+      <div class="form_footer">
+        <p>Вспомнили пароль?
+          <span [routerLink]="['../sign-in']">Войти</span>
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
